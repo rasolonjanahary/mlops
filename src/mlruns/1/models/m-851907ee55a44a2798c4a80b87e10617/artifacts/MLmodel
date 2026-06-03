@@ -1,0 +1,15 @@
+artifact_path: file:///E:/docker/mlops/src/mlruns/1/models/m-851907ee55a44a2798c4a80b87e10617/artifacts
+flavors:
+  sklearn:
+    code: null
+    pickled_model: model.pkl
+    serialization_format: cloudpickle
+    sklearn_version: 1.8.0
+    skops_trusted_types: null
+mlflow_version: 3.10.1
+model_id: m-851907ee55a44a2798c4a80b87e10617
+model_size_bytes: 806
+model_uuid: m-851907ee55a44a2798c4a80b87e10617
+prompts: null
+run_id: 98ffa2cee995464aa2d7c37297dbd3d5
+utc_time_created: '2026-06-03 10:09:23.420223'

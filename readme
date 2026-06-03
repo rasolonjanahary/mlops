@@ -1,1 +1,137 @@
-exemple de projet mlops
+1. Grossesses (pregnancies)
+
+Nombre de grossesses de la patiente.
+
+Valeur	Interprétation
+0	Aucune grossesse
+1 - 3	Peu de grossesses
+4 - 6	Nombre moyen
+> 6	Nombre élevé
+
+Exemple :
+
+pregnancies = 0 → jamais enceinte.
+pregnancies = 8 → huit grossesses au cours de la vie.
+2. Glucose (glucose)
+
+Taux de glucose sanguin après un test de tolérance au glucose.
+
+Valeur (mg/dL)	Interprétation
+< 70	Hypoglycémie
+70 - 99	Normal
+100 - 125	Prédiabète
+≥ 126	Diabète probable
+
+Exemples :
+
+glucose = 85 → normal.
+glucose = 148 → élevé, suspicion de diabète.
+glucose = 183 → très élevé.
+3. Pression diastolique (diastolic)
+
+Pression artérielle lorsque le cœur est au repos.
+
+Valeur (mmHg)	Interprétation
+< 60	Faible
+60 - 80	Normale
+81 - 89	Légèrement élevée
+≥ 90	Hypertension
+
+Exemples :
+
+diastolic = 66 → normal.
+diastolic = 72 → normal.
+diastolic = 95 → hypertension.
+4. Triceps (triceps)
+
+Épaisseur du pli cutané du triceps.
+
+Valeur (mm)	Interprétation
+< 10	Très faible masse grasse
+10 - 20	Faible
+20 - 35	Normale
+> 35	Graisse corporelle importante
+
+Exemples :
+
+triceps = 23 → normal.
+triceps = 35 → limite supérieure normale.
+triceps = 50 → forte accumulation de graisse.
+5. Insuline (insulin)
+
+Concentration d'insuline dans le sang.
+
+Valeur (μU/mL)	Interprétation
+< 16	Faible
+16 - 166	Normale
+> 166	Élevée
+
+Exemples :
+
+insulin = 94 → normal.
+insulin = 168 → légèrement élevé.
+insulin = 300 → très élevé.
+
+⚠️ Dans ce dataset, beaucoup de valeurs 0 signifient souvent « donnée manquante ».
+
+6. BMI (Body Mass Index)
+
+Indice de masse corporelle.
+
+BMI=
+taille
+2
+(m
+2
+)
+poids(kg)
+	​
+
+
+BMI	Interprétation
+< 18.5	Maigreur
+18.5 - 24.9	Normal
+25 - 29.9	Surpoids
+≥ 30	Obésité
+
+Exemples :
+
+BMI = 23.3 → normal.
+BMI = 28.1 → surpoids.
+BMI = 43.1 → obésité sévère.
+7. DPF (Diabetes Pedigree Function)
+
+Mesure le risque génétique de diabète.
+
+Valeur	Interprétation
+< 0.3	Risque familial faible
+0.3 - 0.8	Risque moyen
+0.8 - 1.5	Risque élevé
+> 1.5	Risque très élevé
+
+Exemples :
+
+DPF = 0.167 → faible risque génétique.
+DPF = 0.627 → risque moyen.
+DPF = 2.288 → très forte prédisposition familiale.
+8. Âge (age)
+Valeur	Interprétation
+< 30 ans	Jeune adulte
+30 - 45 ans	Adulte
+45 - 60 ans	Risque accru
+> 60 ans	Risque élevé
+
+Exemples :
+
+age = 21 → jeune adulte.
+age = 33 → adulte.
+age = 50 → facteur de risque supplémentaire.
+9. Diabetes (variable cible)
+Valeur	Signification
+0	Non diabétique
+1	Diabétique
+
+Exemples :
+
+diabetes = 0 → personne non diabétique.
+diabetes = 1 → personne diabétique.
