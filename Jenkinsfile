@@ -29,6 +29,7 @@ pipeline {
         stage('Entrainement du model') {
             steps {
                 sh '''
+                mkdir -p models artifacts
                 . venv/bin/activate
                 python train.py
                 '''
@@ -76,6 +77,20 @@ pipeline {
                 docker compose up -d
                 '''
             }
+        }
+    }
+
+    post {
+        success {
+            mail to: 'rasolonjanahary1263@gmail.com',
+                subject: 'Pipeline réussi',
+                body: 'Déploiement terminé'
+        }
+
+        failure {
+            mail to: 'rasolonjanahary1263@gmail.com',
+                subject: 'Pipeline échoué',
+                body: 'Vérifiez Jenkins'
         }
     }
 }
