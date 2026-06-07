@@ -2,59 +2,67 @@ pipeline {
     agent any
 
     stages {
-        stage("Clone"){
+
+        stage('Clone') {
             steps {
-                git "https://github.com/rasolonjanahary/mlops.git"
+                git 'https://github.com/rasolonjanahary/mlops.git'
             }
         }
 
-        stage("Preparation de l'environnement python"){
+        stage('Préparation Python') {
             steps {
                 sh '''
                 python3 -m venv venv
                 . venv/bin/activate
+                pip install --upgrade pip
                 pip install -r require.txt
                 '''
             }
         }
 
-        stage('Analyse de la vulanerabité sur le code') {
+        stage('Analyse SonarQube') {
             steps {
-                sh '''
-                sonar-scanner
-                '''
+                script {
+                    def scannerHome = tool 'SonarScanner'
+
+                    withSonarQubeEnv('SonarQube') {
+                        sh """
+                        ${scannerHome}/bin/sonar-scanner
+                        """
+                    }
+                }
             }
         }
 
-        stage('Entrainement du model') {
+        stage('Entrainement') {
             steps {
                 sh '''
                 mkdir -p models artifacts
                 . venv/bin/activate
-                python train.py
+                python src/train.py
                 '''
             }
         }
 
-        stage('Evaluation du model') {
+        stage('Evaluation') {
             steps {
                 sh '''
                 . venv/bin/activate
-                python evaluate.py
+                python src/evaluate.py
                 '''
             }
         }
 
-        stage('Tester le fonctionnement du model') {
+        stage('Tests') {
             steps {
                 sh '''
                 . venv/bin/activate
-                python register_model.py
+                python tests/test.py
                 '''
             }
         }
 
-        stage('Builder l\'image docker') {
+        stage('Build Docker') {
             steps {
                 sh '''
                 docker build -t mlops-api:${BUILD_NUMBER} .
@@ -62,12 +70,29 @@ pipeline {
             }
         }
 
-        stage('Push l\'image vers harbord') {
+        stage('Push Harbor') {
             steps {
-                sh '''
-                docker tag mlops-api:${BUILD_NUMBER} ${HARBORD_URL}/diabete_detection/mlops-api:${BUILD_NUMBER}
-                docker push ${HARBORD_URL}/diabete_detection/mlops-api:${BUILD_NUMBER}
-                '''
+                withCredentials([
+                    usernamePassword(
+                        credentialsId: 'harbor-credentials',
+                        usernameVariable: 'HARBOR_USER',
+                        passwordVariable: 'HARBOR_PASSWORD',
+                        passwordVariable: 'HARBOR_URL'
+                    )
+                ]) {
+
+                    sh '''
+                    docker login ${HARBOR_URL} \
+                    -u ${HARBOR_USER} \
+                    -p ${HARBOR_PASSWORD}
+
+                    docker tag mlops-api:${BUILD_NUMBER} \
+                    ${HARBOR_URL}/diabete_detection/mlops-api:${BUILD_NUMBER}
+
+                    docker push \
+                    ${HARBOR_URL}/diabete_detection/mlops-api:${BUILD_NUMBER}
+                    '''
+                }
             }
         }
 
@@ -83,14 +108,14 @@ pipeline {
     post {
         success {
             mail to: 'rasolonjanahary1263@gmail.com',
-                subject: 'Pipeline réussi',
-                body: 'Déploiement terminé'
+                 subject: 'Pipeline réussi',
+                 body: 'Déploiement terminé avec succès.'
         }
 
         failure {
             mail to: 'rasolonjanahary1263@gmail.com',
-                subject: 'Pipeline échoué',
-                body: 'Vérifiez Jenkins'
+                 subject: 'Pipeline échouée',
+                 body: 'Consultez les logs Jenkins.'
         }
     }
 }
