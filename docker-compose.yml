@@ -1,30 +1,63 @@
 version: '3.9'
 
 services:
+
   api:
     build: .
     container_name: fastapi_app
+    restart: always
     ports:
       - "8000:8000"
     volumes:
       - ./api:/app/api
+    networks:
+      - monitoring
 
   mlflow:
-    image: ghcr.io/mlflow/mlflow
+    image: ghcr.io/mlflow/mlflow:latest
     container_name: mlflow
+    restart: always
     ports:
       - "5000:5000"
+    volumes:
+      - ./src/mlruns:/mlflow/mlruns
+      - ./src/mlflow.db:/mlflow/mlflow.db
+    command: >
+      mlflow server
+      --backend-store-uri sqlite:///mlflow/mlflow.db
+      --default-artifact-root /mlflow/mlruns
+      --host 0.0.0.0
+    networks:
+      - monitoring
 
   prometheus:
-    image: prom/prometheus
+    image: prom/prometheus:latest
     container_name: prometheus
-    volumes:
-      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml
+    restart: always
     ports:
       - "9090:9090"
+    volumes:
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml
+    depends_on:
+      - api
+    networks:
+      - monitoring
 
   grafana:
-    image: grafana/grafana
+    image: grafana/grafana:latest
     container_name: grafana
+    restart: always
     ports:
       - "3000:3000"
+    depends_on:
+      - prometheus
+    volumes:
+      - grafana-storage:/var/lib/grafana
+    networks:
+      - monitoring
+
+volumes:
+  grafana-storage:
+
+networks:
+  monitoring:

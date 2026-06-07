@@ -1,6 +1,9 @@
 import joblib
 import numpy as p
 import pandas as pd
+from pathlib import Path
+
+BASE_DIR = Path(__file__).resolve().parent.parent
 
 data_json = {
   "pregnancies": 6,
@@ -14,8 +17,8 @@ data_json = {
 }
 data = pd.DataFrame([data_json])
 
-model = joblib.load("../models/diabete_model_svc.pkl")
-std = joblib.load("../models/scaler.pkl")
+model = joblib.load(BASE_DIR/"models"/"diabete_model_svc.pkl")
+std = joblib.load(BASE_DIR/"models"/"scaler.pkl")
 
 data_std = std.transform(data)
 

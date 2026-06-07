@@ -9,10 +9,13 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score, recall_score
+from pathlib import Path
+
+BASE_DIR = Path(__file__).resolve().parent.parent
 
 matplotlib.use("Agg")
 
-data = pd.read_csv("../data/data_clean.csv")
+data = pd.read_csv(BASE_DIR/"data"/"data_clean.csv")
 
 X = data[["pregnancies","glucose","diastolic","triceps","insulin","bmi","dpf","age"]]
 y = data["diabetes"]
@@ -73,16 +76,16 @@ with mlflow.start_run():
     mlflow.log_metric("recall_rdf", recall_rdf)
 
     if recall_svc >= 0.74:
-        joblib.dump(svc_model, "../models/diabete_model_svc.pkl")
-        joblib.dump(std, "../models/scaler.pkl")
+        joblib.dump(svc_model, BASE_DIR/"models"/"diabete_model_svc.pkl")
+        joblib.dump(std, BASE_DIR/"models"/"scaler.pkl")
         print("Modèle svc sauvegardé")
     elif recall >= 0.65:
-        joblib.dump(lr, "../models/diabete_model_lr.pkl")
-        joblib.dump(std, "../models/scaler.pkl")
+        joblib.dump(lr, BASE_DIR/"models"/"diabete_model_lr.pkl")
+        joblib.dump(std, BASE_DIR/"models"/"scaler.pkl")
         print("Modèle lr sauvegardé")
     elif recall_rdf >= 0.65:
-        joblib.dump(lr, "../models/diabete_model_rdf.pkl")
-        joblib.dump(std, "../data/scaler.pkl")
+        joblib.dump(rdf, BASE_DIR/"models"/"diabete_model_rdf.pkl")
+        joblib.dump(std, BASE_DIR/"models"/"scaler.pkl")
         print("Modèle rdf sauvegardé")
     else:
         print("Recall insuffisant")

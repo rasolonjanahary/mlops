@@ -9,3 +9,4 @@ uvicorn
 mlflow
 jinja2
 python-multipart
+prometheus-client

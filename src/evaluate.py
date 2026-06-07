@@ -1,6 +1,9 @@
 import json
 import joblib
 import pandas as pd
+from pathlib import Path
+
+BASE_DIR = Path(__file__).resolve().parent.parent
 
 from sklearn.metrics import (
     accuracy_score,
@@ -9,13 +12,13 @@ from sklearn.metrics import (
     f1_score
 )
 
-data = pd.read_csv("../data/data_clean.csv")
+data = pd.read_csv(BASE_DIR/"data"/"data_clean.csv")
 
 X = data[["pregnancies","glucose","diastolic","triceps","insulin","bmi","dpf","age"]]
 y = data["diabetes"]
 
-model = joblib.load("../models/diabete_model_svc.pkl")
-std = joblib.load("../models/scaler.pkl")
+model = joblib.load(BASE_DIR/"models"/"diabete_model_svc.pkl")
+std = joblib.load(BASE_DIR/"models"/"scaler.pkl")
 X_std = std.transform(X)
 
 predictions = model.predict(X_std)
@@ -27,7 +30,7 @@ metrics = {
     "f1_score":f1_score(y, predictions)
 }
 
-with open('../artifacts/metrics.json', "w") as f:
+with open(BASE_DIR/"artifacts"/"metrics.json", "w") as f:
     json.dump(metrics, f, indent=4)
 
 
