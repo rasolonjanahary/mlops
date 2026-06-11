@@ -1,6 +1,10 @@
 pipeline {
     agent any
 
+    environment {
+        HARBOR_URL = 'http://192.168.56.101'
+    }
+
     stages {
 
         stage('Clone') {
@@ -77,7 +81,6 @@ pipeline {
                         credentialsId: 'harbor-credentials',
                         usernameVariable: 'HARBOR_USER',
                         passwordVariable: 'HARBOR_PASSWORD',
-                        passwordVariable: 'HARBOR_URL'
                     )
                 ]) {
 
