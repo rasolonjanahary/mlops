@@ -10,3 +10,4 @@ mlflow
 jinja2
 python-multipart
 prometheus-client
+imbalanced-learn
